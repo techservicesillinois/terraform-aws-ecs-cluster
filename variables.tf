@@ -8,37 +8,37 @@ variable "enable_ec2_container_instances" {
 }
 
 variable "iam_instance_profile" {
-  description = "The IAM Instance Profile to associate with the ECS Container Instances"
+  description = "The IAM instance profile to associate with the ECS container instances"
   default     = "ecsInstanceRole"
 }
 
 variable "min" {
-  description = "The minimum number of ECS Container Instances"
+  description = "The minimum number of ECS container instances"
   default     = "1"
 }
 
 variable "max" {
-  description = "The maximum number of Container Instances"
+  description = "The maximum number of container instances"
   default     = "10"
 }
 
 variable "desired" {
-  description = "The desired number of Container Instances"
+  description = "The desired number of container instances"
   default     = "3"
 }
 
 variable "associate_public_ip_address" {
-  description = "Associate a public ip address with the ECS Container Instances"
+  description = "Associate a public ip address with the ECS container instances"
   default     = true
 }
 
 variable "instance_type" {
-  description = "The EC2 Instance Type to use for the Container Instances"
+  description = "The EC2 instance type to use for the container instances"
   default     = "t2.micro"
 }
 
 variable "key_name" {
-  description = "Name of an AWS Key Pair to use for the Container Instances"
+  description = "Name of an AWS key pair to use for the container instances"
   default     = ""
 }
 
@@ -48,7 +48,7 @@ variable "vpc" {
 }
 
 variable "subnet_ids" {
-  description = "A list of subnet ids to use for the Container Instances"
+  description = "A list of subnet ids to use for the container instances"
   default     = []
 }
 
