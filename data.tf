@@ -38,7 +38,7 @@ data "aws_ami" "selected" {
 data "template_file" "selected" {
   count = "${local.ec2 ? 1 : 0}"
 
-  template = "${file("${path.module}/ecs.tpl")}"
+  template = "${local.template}"
 
   vars {
     ecs_cluster_name = "${var.name}"

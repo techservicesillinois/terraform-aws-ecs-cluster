@@ -52,6 +52,11 @@ variable "subnet_ids" {
   default     = []
 }
 
+variable "template" {
+  description = "Template used to configure underlying EC2 instances"
+  default     = ""
+}
+
 variable "tier" {
   description = "Name of subnet tier (e.g., public, private, nat)"
   default     = ""
