@@ -42,5 +42,6 @@ data "template_file" "selected" {
 
   vars {
     ecs_cluster_name = "${var.name}"
+    efs_volume_name  = "${var.efs_volume_name}"
   }
 }

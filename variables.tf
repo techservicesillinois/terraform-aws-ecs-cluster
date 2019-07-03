@@ -27,6 +27,11 @@ variable "desired" {
   default     = "3"
 }
 
+variable "efs_volume_name" {
+  description = "Optional EFS volume name"
+  default     = ""
+}
+
 variable "associate_public_ip_address" {
   description = "Associate a public ip address with the ECS container instances"
   default     = true

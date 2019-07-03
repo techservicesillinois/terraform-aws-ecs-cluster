@@ -6,6 +6,8 @@ locals {
 resource "aws_security_group" "default" {
   count = "${local.ec2 ? 1 : 0}"
 
+  # TODO: Make this user-selectable with this description as default.
+  description = "ECS container instance security group for ${var.name} cluster"
   name_prefix = "ecs-cluster-${var.name}-ec2"
   vpc_id      = "${data.aws_vpc.selected.0.id}"
 
