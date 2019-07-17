@@ -1,7 +1,7 @@
 locals {
   ec2        = "${var.enable_ec2_container_instances}"
   subnet_ids = "${distinct(concat(flatten(data.aws_subnet_ids.selected.*.ids), var.subnet_ids))}"
-  template   = "${var.template == "" ? file("${path.module}/"ecs.tpl") : file(var.template)}"
+  template   = "${var.template == "" ? file("${path.module}/ecs.tpl") : file(var.template)}"
 }
 
 output "rendered_template" {
