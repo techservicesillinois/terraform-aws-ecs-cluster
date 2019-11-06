@@ -1,29 +1,29 @@
 data "aws_security_group" "selected" {
-  count = "${local.ec2 ? length(var.security_groups) : 0}"
+  count = local.ec2 ? length(var.security_groups) : 0
 
-  name = "${var.security_groups[count.index]}"
+  name = var.security_groups[count.index]
 }
 
 data "aws_vpc" "selected" {
-  count = "${local.ec2 ? 1 : 0}"
+  count = local.ec2 ? 1 : 0
 
-  tags {
-    Name = "${var.vpc}"
+  tags = {
+    Name = var.vpc
   }
 }
 
 data "aws_subnet_ids" "selected" {
-  count = "${local.ec2 && var.tier != "" ? 1 : 0}"
+  count = local.ec2 && var.tier != "" ? 1 : 0
 
-  vpc_id = "${data.aws_vpc.selected.id}"
+  vpc_id = data.aws_vpc.selected[0].id
 
-  tags {
-    Tier = "${var.tier}"
+  tags = {
+    Tier = var.tier
   }
 }
 
 data "aws_ami" "selected" {
-  count = "${local.ec2 ? 1 : 0}"
+  count = local.ec2 ? 1 : 0
 
   most_recent = true
 
@@ -36,12 +36,12 @@ data "aws_ami" "selected" {
 }
 
 data "template_file" "selected" {
-  count = "${local.ec2 ? 1 : 0}"
+  count = local.ec2 ? 1 : 0
 
-  template = "${local.template}"
+  template = local.template
 
-  vars {
-    ecs_cluster_name = "${var.name}"
-    efs_volume_name  = "${var.efs_volume_name}"
+  vars = {
+    ecs_cluster_name = var.name
+    efs_volume_name  = var.efs_volume_name
   }
 }
