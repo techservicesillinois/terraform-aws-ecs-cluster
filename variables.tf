@@ -14,17 +14,17 @@ variable "iam_instance_profile" {
 
 variable "min" {
   description = "The minimum number of ECS container instances"
-  default     = "1"
+  default     = 1
 }
 
 variable "max" {
   description = "The maximum number of container instances"
-  default     = "10"
+  default     = 10
 }
 
 variable "desired" {
   description = "The desired number of container instances"
-  default     = "3"
+  default     = 3
 }
 
 variable "efs_volume_name" {
@@ -54,6 +54,7 @@ variable "vpc" {
 
 variable "subnet_ids" {
   description = "A list of subnet ids to use for the container instances"
+  type        = list(string)
   default     = []
 }
 
@@ -69,20 +70,24 @@ variable "tier" {
 
 variable "ssh_cidr_blocks" {
   description = "List of CIDR blocks to use for SSH access"
+  type        = list(string)
   default     = []
 }
 
 variable "tags" {
   description = "A mapping of tags to assign to all resources that support tagging"
+  type        = map(string)
   default     = {}
 }
 
 variable "security_group_ids" {
   description = "A list of security group id(s) that can directly communicate with containers on the cluster"
+  type        = list(string)
   default     = []
 }
 
 variable "security_groups" {
   description = "A list of security group name(s) that can directly communicate with containers on the cluster"
+  type        = list(string)
   default     = []
 }
