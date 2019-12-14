@@ -14,17 +14,17 @@ variable "iam_instance_profile" {
 
 variable "min" {
   description = "The minimum number of ECS container instances"
-  default     = "1"
+  default     = 1
 }
 
 variable "max" {
   description = "The maximum number of container instances"
-  default     = "10"
+  default     = 10
 }
 
 variable "desired" {
   description = "The desired number of container instances"
-  default     = "3"
+  default     = 3
 }
 
 variable "efs_volume_name" {

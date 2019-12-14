@@ -1,3 +1,7 @@
+#output "rendered_template" {
+#  value = "${data.template_file.selected.0.rendered}"
+#}
+
 output "security_group_name" {
   value = "${aws_security_group.default.*.name}"
 }

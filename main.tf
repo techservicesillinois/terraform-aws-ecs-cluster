@@ -6,10 +6,6 @@ locals {
   security_group_ids = "${distinct(concat(data.aws_security_group.selected.*.id, var.security_group_ids))}"
 }
 
-output "rendered_template" {
-  value = "${data.template_file.selected.0.rendered}"
-}
-
 resource "aws_ecs_cluster" "default" {
   name = "${var.name}"
 }
@@ -35,7 +31,7 @@ resource "aws_launch_configuration" "default" {
   # aws ec2 describe-images --image-ids ami-04b61a4d3b11cc8ea
   ebs_block_device {
     device_name = "/dev/xvdcz"
-    volume_size = "220"        # Gigabytes
+    volume_size = 220          # Gigabytes
   }
 
   associate_public_ip_address = "${var.associate_public_ip_address}"
