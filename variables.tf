@@ -14,17 +14,17 @@ variable "iam_instance_profile" {
 
 variable "min" {
   description = "The minimum number of ECS container instances"
-  default     = "1"
+  default     = 1
 }
 
 variable "max" {
   description = "The maximum number of container instances"
-  default     = "10"
+  default     = 10
 }
 
 variable "desired" {
   description = "The desired number of container instances"
-  default     = "3"
+  default     = 3
 }
 
 variable "efs_volume_name" {
@@ -77,12 +77,22 @@ variable "tags" {
   default     = {}
 }
 
+variable "ingress_security_group_ids" {
+  description = "A list of security group id(s) that can directly communicate with containers"
+  default     = []
+}
+
+variable "ingress_security_groups" {
+  description = "A list of security group name(s) that can directly communicate with containers"
+  default     = []
+}
+
 variable "security_group_ids" {
-  description = "A list of security group id(s) that can directly communicate with containers on the cluster"
+  description = "A list of security group ID(s) associated with the (EC2) container instances"
   default     = []
 }
 
 variable "security_groups" {
-  description = "A list of security group name(s) that can directly communicate with containers on the cluster"
+  description = "A list of security group name(s) associated with the (EC2) container instances"
   default     = []
 }
