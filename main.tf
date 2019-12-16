@@ -1,9 +1,17 @@
 locals {
-  ec2      = var.enable_ec2_container_instances
-  template = var.template == "" ? file("${path.module}/ecs.tpl") : file(var.template)
-
+  ec2 = var.enable_ec2_container_instances
   subnet_ids = distinct(
     concat(flatten(data.aws_subnet_ids.selected.*.ids), var.subnet_ids),
+  )
+  template = file(
+    var.template == "" ? format("%s/ecs.tpl", path.module) : var.template,
+  )
+
+  security_group_ids = distinct(
+    concat(
+      data.aws_security_group.selected.*.id,
+      var.security_group_ids,
+    ),
   )
 }
 
@@ -19,7 +27,7 @@ resource "aws_launch_configuration" "default" {
   key_name      = var.key_name
 
   image_id             = data.aws_ami.selected[0].id
-  security_groups      = [aws_security_group.default[0].id]
+  security_groups      = concat([aws_security_group.default[0].id], local.security_group_ids)
   iam_instance_profile = var.iam_instance_profile
 
   user_data = data.template_file.selected[0].rendered

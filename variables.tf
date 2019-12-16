@@ -80,14 +80,26 @@ variable "tags" {
   default     = {}
 }
 
+variable "ingress_security_group_ids" {
+  description = "A list of security group id(s) that can directly communicate with containers"
+  type        = list(string)
+  default     = []
+}
+
+variable "ingress_security_groups" {
+  description = "A list of security group name(s) that can directly communicate with containers"
+  type        = list(string)
+  default     = []
+}
+
 variable "security_group_ids" {
-  description = "A list of security group id(s) that can directly communicate with containers on the cluster"
+  description = "A list of security group ID(s) associated with the (EC2) container instances"
   type        = list(string)
   default     = []
 }
 
 variable "security_groups" {
-  description = "A list of security group name(s) that can directly communicate with containers on the cluster"
+  description = "A list of security group name(s) associated with the (EC2) container instances"
   type        = list(string)
   default     = []
 }

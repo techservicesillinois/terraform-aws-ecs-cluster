@@ -1,3 +1,9 @@
+data "aws_security_group" "ingress" {
+  count = local.ec2 ? length(var.ingress_security_groups) : 0
+
+  name = var.ingress_security_groups[count.index]
+}
+
 data "aws_security_group" "selected" {
   count = local.ec2 ? length(var.security_groups) : 0
 
