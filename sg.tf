@@ -1,7 +1,10 @@
 # http://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-update-security-groups.html
 locals {
-  security_group_ids = distinct(
-    concat(data.aws_security_group.selected.*.id, var.security_group_ids),
+  ingress_sg_ids = distinct(
+    concat(
+      data.aws_security_group.ingress.*.id,
+      var.ingress_security_group_ids,
+    ),
   )
 }
 
@@ -57,26 +60,29 @@ resource "aws_security_group_rule" "allow_ssh" {
   security_group_id = aws_security_group.default[0].id
 }
 
+# Add rules to default cluster security group to allow inbound
+# traffic from user supplied security groups to containers
 # https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_PortMapping.html
-resource "aws_security_group_rule" "allow_lb" {
-  count     = local.ec2 ? length(local.security_group_ids) : 0
+resource "aws_security_group_rule" "allow_ingress" {
+  count     = local.ec2 ? length(local.ingress_sg_ids) : 0
   type      = "ingress"
   from_port = 1024
   to_port   = 65535
   protocol  = "tcp"
 
-  source_security_group_id = element(local.security_group_ids, count.index)
+  source_security_group_id = element(local.ingress_sg_ids, count.index)
   security_group_id        = aws_security_group.default[0].id
 }
 
+# Add rules to user supplied security groups to allow outbound traffic to containers
 # https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_PortMapping.html
-resource "aws_security_group_rule" "allow_cluster" {
-  count     = local.ec2 ? length(local.security_group_ids) : 0
+resource "aws_security_group_rule" "allow_egress" {
+  count     = local.ec2 ? length(local.ingress_sg_ids) : 0
   type      = "egress"
   from_port = 1024
   to_port   = 65535
   protocol  = "tcp"
 
   source_security_group_id = aws_security_group.default[0].id
-  security_group_id        = element(local.security_group_ids, count.index)
+  security_group_id        = element(local.ingress_sg_ids, count.index)
 }
