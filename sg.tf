@@ -64,7 +64,7 @@ resource "aws_security_group_rule" "allow_ssh" {
 # traffic from user supplied security groups to containers
 # https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_PortMapping.html
 resource "aws_security_group_rule" "allow_ingress" {
-  for_each = local.ec2 ? local.ingress_sg_ids : null
+  for_each = local.ec2 ? local.ingress_sg_ids : toset([])
 
   type      = "ingress"
   from_port = 1024
@@ -78,7 +78,7 @@ resource "aws_security_group_rule" "allow_ingress" {
 # Add rules to user supplied security groups to allow outbound traffic to containers
 # https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_PortMapping.html
 resource "aws_security_group_rule" "allow_egress" {
-  for_each = local.ec2 ? local.ingress_sg_ids : null
+  for_each = local.ec2 ? local.ingress_sg_ids : toset([])
 
   type      = "egress"
   from_port = 1024
