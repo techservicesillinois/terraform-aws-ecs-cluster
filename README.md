@@ -1,6 +1,6 @@
 # ecs-cluster
 
-[![Build Status](https://drone.techservices.illinois.edu/api/badges/techservicesillinois/terraform-aws-ecs-cluster/status.svg)](https://drone.techservices.illinois.edu/techservicesillinois/terraform-aws-ecs-cluster)
+[![Terraform actions status](https://github.com/techservicesillinois/terraform-aws-ecs-cluster/workflows/terraform/badge.svg)](https://github.com/techservicesillinois/terraform-aws-ecs-cluster/actions)
 
 Provides an ECS cluster, and optionally EC2 container instances.
 
