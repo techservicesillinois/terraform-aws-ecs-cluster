@@ -75,7 +75,7 @@ variable "ssh_cidr_blocks" {
 }
 
 variable "tags" {
-  description = "A mapping of tags to assign to all resources that support tagging"
+  description = "Map of tags for resources where supported"
   type        = map(string)
   default     = {}
 }

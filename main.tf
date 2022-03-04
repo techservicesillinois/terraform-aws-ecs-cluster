@@ -17,6 +17,7 @@ locals {
 
 resource "aws_ecs_cluster" "default" {
   name = var.name
+  tags = var.tags
 }
 
 resource "aws_launch_configuration" "default" {
