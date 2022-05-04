@@ -1,23 +1,21 @@
 locals {
-  ec2 = var.enable_ec2_container_instances
-  subnet_ids = distinct(
-    concat(flatten(data.aws_subnet_ids.selected.*.ids), var.subnet_ids),
-  )
+  ec2        = var.enable_ec2_container_instances
+  subnet_ids = flatten([for v in module.get-subnets : v.subnets.ids])
   template = file(
     var.template == "" ? format("%s/ecs.tpl", path.module) : var.template,
   )
-
   security_group_ids = distinct(
     concat(
       data.aws_security_group.selected.*.id,
       var.security_group_ids,
     ),
   )
+  vpc_id = element(distinct([for v in module.get-subnets : v.vpc.id]), 0)
 }
 
 resource "aws_ecs_cluster" "default" {
   name = var.name
-  tags = var.tags
+  tags = merge({ "Name" = var.name }, var.tags)
 }
 
 resource "aws_launch_configuration" "default" {

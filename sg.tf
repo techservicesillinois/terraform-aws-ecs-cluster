@@ -1,4 +1,5 @@
 # http://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-update-security-groups.html
+
 locals {
   ingress_sg_ids = toset(
     concat(
@@ -14,7 +15,7 @@ resource "aws_security_group" "default" {
   # TODO: Make this user-selectable with this description as default.
   description = "ECS container instance security group for ${var.name} cluster"
   name_prefix = "ecs-cluster-${var.name}-ec2"
-  vpc_id      = data.aws_vpc.selected[0].id
+  vpc_id      = local.vpc_id
 
   lifecycle {
     create_before_destroy = true
