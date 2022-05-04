@@ -63,8 +63,8 @@ variable "template" {
   default     = ""
 }
 
-variable "tier" {
-  description = "Name of subnet tier (e.g., public, private, nat)"
+variable "subnet_type" {
+  description = "Subnet type (e.g., 'campus', 'private', 'public') for resource placement"
   default     = ""
 }
 

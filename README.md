@@ -26,7 +26,7 @@ The following arguments are supported:
 * `name` - (Required) The name of the Amazon ECS cluster to create.
 
 * `enable_ec2_container_instances` - (Optional) Set to false for
-  Fargate only clusters (default true).
+  Fargate clusters. Default is true.
 
 * `iam_instance_profile` - (Optional) The IAM instance profile to
    associate with the ECS container instances (default ecsInstanceRole).
@@ -59,7 +59,7 @@ The following arguments are supported:
 * `template` - (Optional) Template used to configure underlying EC2
   instances.
 
-* `tier` - (Optional) Name of subnet tier (e.g., public, private, nat).
+* `subnet_type` - (Optional) Subnet type (e.g., 'campus', 'private', 'public') for resource placement. Useful for EC2 clusters; not used for Fargate clusters.
 
 * `ssh_cidr_blocks` - (Optional) List of CIDR blocks to use for SSH
   access.

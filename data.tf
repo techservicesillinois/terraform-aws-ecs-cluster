@@ -1,3 +1,14 @@
+# FIXME: Replace reference to branch with reference to tagged version.
+
+module "get-subnets" {
+  source = "github.com/techservicesillinois/terraform-aws-util//modules/get-subnets?ref=v3.0.4"
+
+  count = local.ec2 ? 1 : 0
+
+  subnet_type = var.subnet_type
+  vpc         = var.vpc
+}
+
 data "aws_security_group" "ingress" {
   count = local.ec2 ? length(var.ingress_security_groups) : 0
 
@@ -8,24 +19,6 @@ data "aws_security_group" "selected" {
   count = local.ec2 ? length(var.security_groups) : 0
 
   name = var.security_groups[count.index]
-}
-
-data "aws_vpc" "selected" {
-  count = local.ec2 ? 1 : 0
-
-  tags = {
-    Name = var.vpc
-  }
-}
-
-data "aws_subnet_ids" "selected" {
-  count = local.ec2 && var.tier != "" ? 1 : 0
-
-  vpc_id = data.aws_vpc.selected[0].id
-
-  tags = {
-    Tier = var.tier
-  }
 }
 
 data "aws_ami" "selected" {
