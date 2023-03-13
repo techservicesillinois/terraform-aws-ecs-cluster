@@ -15,7 +15,7 @@ locals {
 
 resource "aws_ecs_cluster" "default" {
   name = var.name
-  tags = merge({ "Name" = var.name }, var.tags)
+  tags = merge({ Name = var.name }, var.tags)
 }
 
 resource "aws_launch_configuration" "default" {
