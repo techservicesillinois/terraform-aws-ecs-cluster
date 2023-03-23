@@ -47,11 +47,6 @@ variable "key_name" {
   default     = ""
 }
 
-variable "vpc" {
-  description = "The name of the VPC to use"
-  default     = ""
-}
-
 variable "subnet_ids" {
   description = "A list of subnet ids to use for the container instances"
   type        = list(string)
@@ -102,4 +97,9 @@ variable "security_groups" {
   description = "A list of security group name(s) associated with the (EC2) container instances"
   type        = list(string)
   default     = []
+}
+
+variable "vpc" {
+  description = "The name of the VPC to use"
+  default     = null
 }

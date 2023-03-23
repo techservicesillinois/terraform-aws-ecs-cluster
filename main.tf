@@ -1,6 +1,6 @@
 locals {
   ec2        = var.enable_ec2_container_instances
-  subnet_ids = flatten([for v in module.get-subnets : v.subnets.ids])
+  subnet_ids = (local.ec2) ? flatten([for v in module.get-subnets : v.subnets.ids]) : null
   template = file(
     var.template == "" ? format("%s/ecs.tpl", path.module) : var.template,
   )
@@ -10,7 +10,7 @@ locals {
       var.security_group_ids,
     ),
   )
-  vpc_id = element(distinct([for v in module.get-subnets : v.vpc.id]), 0)
+  vpc_id = (local.ec2) ? element(distinct([for v in module.get-subnets : v.vpc.id]), 0) : null
 }
 
 resource "aws_ecs_cluster" "default" {
