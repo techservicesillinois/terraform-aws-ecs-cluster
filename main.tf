@@ -1,8 +1,9 @@
 locals {
-  ec2        = var.enable_ec2_container_instances
-  subnet_ids = (local.ec2) ? flatten([for v in module.get-subnets : v.subnets.ids]) : null
+  ec2         = var.enable_ec2
+  name_prefix = format("%s-ecs-cluster-", var.name)
+  subnet_ids  = (var.enable_ec2) ? flatten([for v in module.get-subnets : v.subnets.ids]) : null
   template = file(
-    var.template == "" ? format("%s/ecs.tpl", path.module) : var.template,
+    var.template == null ? format("%s/ecs.tpl", path.module) : var.template,
   )
   security_group_ids = distinct(
     concat(
@@ -10,7 +11,7 @@ locals {
       var.security_group_ids,
     ),
   )
-  vpc_id = (local.ec2) ? element(distinct([for v in module.get-subnets : v.vpc.id]), 0) : null
+  vpc_id = (var.enable_ec2) ? element(distinct([for v in module.get-subnets : v.vpc.id]), 0) : null
 }
 
 resource "aws_ecs_cluster" "default" {
@@ -18,10 +19,36 @@ resource "aws_ecs_cluster" "default" {
   tags = merge({ Name = var.name }, var.tags)
 }
 
-resource "aws_launch_configuration" "default" {
-  count = local.ec2 ? 1 : 0
+resource "aws_autoscaling_group" "default" {
+  count = var.enable_ec2 ? 1 : 0
 
-  name_prefix   = "ecs-cluster-${var.name}"
+  desired_capacity     = var.desired_capacity
+  health_check_type    = "EC2"
+  launch_configuration = aws_launch_configuration.default[0].name
+  min_size             = var.min_size
+  max_size             = var.max_size
+  name_prefix          = local.name_prefix
+  vpc_zone_identifier  = local.subnet_ids
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  dynamic "tag" {
+    for_each = merge({ Name = var.name }, var.tags)
+    content {
+      key                 = tag.key
+      value               = tag.value
+      propagate_at_launch = true
+    }
+  }
+}
+
+resource "aws_launch_configuration" "default" {
+  count = var.enable_ec2 ? 1 : 0
+
+  # name_prefix   = "ecs-cluster-${var.name}"
+  name_prefix   = local.name_prefix
   instance_type = var.instance_type
   key_name      = var.key_name
 
@@ -43,28 +70,4 @@ resource "aws_launch_configuration" "default" {
   }
 
   associate_public_ip_address = var.associate_public_ip_address
-}
-
-resource "aws_autoscaling_group" "default" {
-  count = local.ec2 ? 1 : 0
-
-  name_prefix = "ecs-cluster-${var.name}"
-
-  min_size         = var.min
-  max_size         = var.max
-  desired_capacity = var.desired
-
-  health_check_type    = "EC2"
-  launch_configuration = aws_launch_configuration.default[0].name
-  vpc_zone_identifier  = local.subnet_ids
-
-  tag {
-    key                 = "Name"
-    value               = "ecs-cluster-${var.name}"
-    propagate_at_launch = true
-  }
-
-  lifecycle {
-    create_before_destroy = true
-  }
 }
