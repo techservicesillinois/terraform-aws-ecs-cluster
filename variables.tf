@@ -1,9 +1,20 @@
-variable "name" {
-  description = "The name of the Amazon ECS cluster to create"
+variable "associate_public_ip_address" {
+  description = "Associate a public ip address with the ECS container instances"
+  default     = true
 }
 
-variable "enable_ec2_container_instances" {
-  description = "Set to false for Fargate only clusters."
+variable "desired_capacity" {
+  description = "Desired number of EC2 instances"
+  default     = null
+}
+
+variable "efs_volume_name" {
+  description = "Optional EFS volume name"
+  default     = null
+}
+
+variable "enable_ec2" {
+  description = "Use EC2 cluster; set to false for a Fargate cluster"
   default     = true
 }
 
@@ -12,79 +23,40 @@ variable "iam_instance_profile" {
   default     = "ecsInstanceRole"
 }
 
-variable "min" {
-  description = "The minimum number of ECS container instances"
-  default     = 1
-}
-
-variable "max" {
-  description = "The maximum number of container instances"
-  default     = 10
-}
-
-variable "desired" {
-  description = "The desired number of container instances"
-  default     = 3
-}
-
-variable "efs_volume_name" {
-  description = "Optional EFS volume name"
-  default     = ""
-}
-
-variable "associate_public_ip_address" {
-  description = "Associate a public ip address with the ECS container instances"
-  default     = true
-}
-
-variable "instance_type" {
-  description = "The EC2 instance type to use for the container instances"
-  default     = "t2.micro"
-}
-
-variable "key_name" {
-  description = "Name of an AWS key pair to use for the container instances"
-  default     = ""
-}
-
-variable "subnet_ids" {
-  description = "A list of subnet ids to use for the container instances"
-  type        = list(string)
-  default     = []
-}
-
-variable "template" {
-  description = "Template used to configure underlying EC2 instances"
-  default     = ""
-}
-
-variable "subnet_type" {
-  description = "Subnet type (e.g., 'campus', 'private', 'public') for resource placement"
-  default     = ""
-}
-
-variable "ssh_cidr_blocks" {
-  description = "List of CIDR blocks to use for SSH access"
-  type        = list(string)
-  default     = []
-}
-
-variable "tags" {
-  description = "Map of tags for resources where supported"
-  type        = map(string)
-  default     = {}
-}
-
 variable "ingress_security_group_ids" {
   description = "A list of security group id(s) that can directly communicate with containers"
   type        = list(string)
   default     = []
 }
 
-variable "ingress_security_groups" {
+variable "ingress_security_group_names" {
   description = "A list of security group name(s) that can directly communicate with containers"
   type        = list(string)
   default     = []
+}
+
+variable "instance_type" {
+  description = "The EC2 instance type to use for the container instances"
+  default     = null
+}
+
+variable "key_name" {
+  description = "Name of an AWS key pair to use for the container instances"
+  default     = null
+}
+
+variable "min_size" {
+  description = "Minimum number of EC2 instances"
+  default     = null
+}
+
+variable "max_size" {
+  description = "Maximum number of EC2 instances"
+  default     = null
+}
+
+variable "name" {
+  description = "The name of the Amazon ECS cluster to create"
 }
 
 variable "security_group_ids" {
@@ -93,10 +65,39 @@ variable "security_group_ids" {
   default     = []
 }
 
-variable "security_groups" {
+variable "security_group_names" {
   description = "A list of security group name(s) associated with the (EC2) container instances"
   type        = list(string)
   default     = []
+}
+
+
+variable "ssh_cidr_blocks" {
+  description = "List of CIDR blocks to use for SSH access"
+  type        = list(string)
+  default     = []
+}
+
+variable "subnet_ids" {
+  description = "A list of subnet ids to use for the container instances"
+  type        = list(string)
+  default     = []
+}
+
+variable "subnet_type" {
+  description = "Subnet type (e.g., 'campus', 'private', 'public') for resource placement"
+  default     = null
+}
+
+variable "tags" {
+  description = "Tags to be applied to resources where supported"
+  type        = map(string)
+  default     = {}
+}
+
+variable "template" {
+  description = "Template used to configure underlying EC2 instances"
+  default     = null
 }
 
 variable "vpc" {

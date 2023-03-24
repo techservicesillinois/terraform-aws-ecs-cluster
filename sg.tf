@@ -10,24 +10,22 @@ locals {
 }
 
 resource "aws_security_group" "default" {
-  count = local.ec2 ? 1 : 0
+  count = var.enable_ec2 ? 1 : 0
 
   # TODO: Make this user-selectable with this description as default.
   description = "ECS container instance security group for ${var.name} cluster"
-  name_prefix = "ecs-cluster-${var.name}-ec2"
+  name_prefix = local.name_prefix
   vpc_id      = local.vpc_id
 
   lifecycle {
     create_before_destroy = true
   }
 
-  tags = {
-    "Name" = format("ecs-cluster-%s-ec2", var.name)
-  }
+  tags = merge({ Name = var.name }, var.tags)
 }
 
 resource "aws_security_group_rule" "allow_icmp" {
-  count = local.ec2 ? 1 : 0
+  count = var.enable_ec2 ? 1 : 0
 
   type      = "ingress"
   from_port = 8
@@ -39,7 +37,7 @@ resource "aws_security_group_rule" "allow_icmp" {
 }
 
 resource "aws_security_group_rule" "allow_all_egress" {
-  count = local.ec2 ? 1 : 0
+  count = var.enable_ec2 ? 1 : 0
 
   type      = "egress"
   from_port = 0
@@ -51,7 +49,7 @@ resource "aws_security_group_rule" "allow_all_egress" {
 }
 
 resource "aws_security_group_rule" "allow_ssh" {
-  count     = local.ec2 && length(var.ssh_cidr_blocks) > 0 ? 1 : 0
+  count     = var.enable_ec2 && length(var.ssh_cidr_blocks) > 0 ? 1 : 0
   type      = "ingress"
   from_port = 22
   to_port   = 22
@@ -62,10 +60,12 @@ resource "aws_security_group_rule" "allow_ssh" {
 }
 
 # Add rules to default cluster security group to allow inbound
-# traffic from user supplied security groups to containers
+# traffic from user-supplied security groups to containers.
+#
 # https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_PortMapping.html
+
 resource "aws_security_group_rule" "allow_ingress" {
-  for_each = local.ec2 ? local.ingress_sg_ids : toset([])
+  for_each = var.enable_ec2 ? local.ingress_sg_ids : toset([])
 
   type      = "ingress"
   from_port = 1024
@@ -76,10 +76,13 @@ resource "aws_security_group_rule" "allow_ingress" {
   security_group_id        = aws_security_group.default[0].id
 }
 
-# Add rules to user supplied security groups to allow outbound traffic to containers
+# Add rules to user supplied security groups to allow outbound traffic
+# from containers.
+#
 # https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_PortMapping.html
+
 resource "aws_security_group_rule" "allow_egress" {
-  for_each = local.ec2 ? local.ingress_sg_ids : toset([])
+  for_each = var.enable_ec2 ? local.ingress_sg_ids : toset([])
 
   type      = "egress"
   from_port = 1024
