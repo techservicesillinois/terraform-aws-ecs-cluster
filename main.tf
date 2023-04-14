@@ -47,27 +47,23 @@ resource "aws_autoscaling_group" "default" {
 resource "aws_launch_configuration" "default" {
   count = var.enable_ec2 ? 1 : 0
 
-  # name_prefix   = "ecs-cluster-${var.name}"
-  name_prefix   = local.name_prefix
-  instance_type = var.instance_type
-  key_name      = var.key_name
+  associate_public_ip_address = var.associate_public_ip_address
+  iam_instance_profile        = var.iam_instance_profile
+  image_id                    = data.aws_ami.selected[0].id
+  instance_type               = var.instance_type
+  key_name                    = var.key_name
+  name_prefix                 = local.name_prefix
+  security_groups             = concat([aws_security_group.default[0].id], local.security_group_ids)
+  user_data                   = data.template_file.selected[0].rendered
 
-  image_id             = data.aws_ami.selected[0].id
-  security_groups      = concat([aws_security_group.default[0].id], local.security_group_ids)
-  iam_instance_profile = var.iam_instance_profile
-
-  user_data = data.template_file.selected[0].rendered
+  # aws ec2 describe-images --image-ids ami-04b61a4d3b11cc8ea
+  ebs_block_device {
+    device_name = "/dev/xvdcz"
+    volume_size = 220 # Volume size in gigabytes.
+  }
 
   # Always use name_prefix with this lifecycle setting
   lifecycle {
     create_before_destroy = true
   }
-
-  # aws ec2 describe-images --image-ids ami-04b61a4d3b11cc8ea
-  ebs_block_device {
-    device_name = "/dev/xvdcz"
-    volume_size = 220 # Gigabytes
-  }
-
-  associate_public_ip_address = var.associate_public_ip_address
 }
