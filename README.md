@@ -22,7 +22,7 @@ module "fargate-cluster" {
 ```hcl
 module "ecs-cluster" {
   source = "git@github.com:techservicesillinois/terraform-aws-ecs-cluster"
-  
+
   name             = "ec2-example"
   desired_capacity = 1
   instance_type    = "t4g.small"
@@ -93,7 +93,7 @@ Applies only to EC2 clusters.
 * `subnet_type` - (Optional) Subnet type (e.g., 'campus', 'private', 'public') for resource placement. Applies only to EC2 clusters.
 
 * `tags` - (Optional) Tags to be applied to resources where supported.
-  
+ 
 * `template` - (Optional) Template used to configure underlying EC2
   instances. Applies only to EC2 clusters.
 

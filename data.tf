@@ -25,8 +25,9 @@ data "aws_ami" "selected" {
   most_recent = true
 
   filter {
-    name   = "name"
-    values = ["amzn-ami-*-amazon-ecs-optimized"]
+    name = "name"
+    # values = ["amzn-ami-*-amazon-ecs-optimized"]
+    values = ["amzn2-ami-ecs-kernel-5.10-hvm-*-arm64-ebs"]
   }
 
   owners = ["amazon"]

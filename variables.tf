@@ -36,7 +36,7 @@ variable "ingress_security_group_names" {
 }
 
 variable "instance_type" {
-  description = "The EC2 instance type to use for the container instances"
+  description = "EC2 instance type for the cluster"
   default     = null
 }
 
@@ -101,6 +101,6 @@ variable "template" {
 }
 
 variable "vpc" {
-  description = "The name of the VPC to use"
+  description = "VPC name"
   default     = null
 }
