@@ -71,6 +71,19 @@ variable "security_group_names" {
   default     = []
 }
 
+variable "setting" {
+  description = "List of cluster settings"
+  type = list(object({
+    name  = string
+    value = string
+  }))
+  default = []
+
+  validation {
+    condition     = try(contains(["containerInsights"], var.setting.name), true)
+    error_message = "The 'setting' value is not one of the valid values 'containerInsights'."
+  }
+}
 
 variable "ssh_cidr_blocks" {
   description = "List of CIDR blocks to use for SSH access"

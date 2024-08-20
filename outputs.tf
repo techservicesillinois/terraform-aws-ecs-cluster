@@ -9,3 +9,7 @@ output "name" {
 output "security_groups" {
   value = { for sg in aws_security_group.default : (sg.name) => sg.id }
 }
+
+output "setting" {
+  value = { for s in var.setting : s.name => s.value }
+}
