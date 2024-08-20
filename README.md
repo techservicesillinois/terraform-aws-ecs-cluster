@@ -100,6 +100,30 @@ Applies only to EC2 clusters.
 * `vpc` - (Optional) The name of the VPC in which to place the cluster.
 Applies only to EC2 clusters.
 
+`setting`
+-------
+
+A `setting` block is a list of maps, each map containing a name and value pair
+describing cluster settings to be applied. The `setting` block is optional.
+
+Currently, only one setting is supported.
+
+* `name` - (Required) The setting name.
+
+* `value` – (Optional) The setting value corresponding to `name`.
+
+Currently, the only value allowed for `name` is `containerInsights`. The
+corresponding `value` in the map must be either `enabled` or `disabled`.
+
+```
+  setting = [
+    {
+      name  = "containerInsights"
+      value = "enabled"
+    }
+  ]
+```
+
 Attributes Reference
 --------------------
 
@@ -110,3 +134,5 @@ The following attributes are exported:
 * `name` - The cluster name.
 
 * `security_groups` - A map whose keys are the security group name, and whose values are the corresponding security group ID. Applies only to EC2 clusters. 
+
+* `setting` – A map containing each of the defined `setting` name/value pairs.

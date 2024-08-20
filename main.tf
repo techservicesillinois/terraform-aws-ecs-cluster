@@ -17,6 +17,14 @@ locals {
 resource "aws_ecs_cluster" "default" {
   name = var.name
   tags = merge({ Name = var.name }, var.tags)
+
+  dynamic "setting" {
+    for_each = { for s in var.setting : s.name => s.value }
+    content {
+      name  = setting.key
+      value = setting.value
+    }
+  }
 }
 
 resource "aws_autoscaling_group" "default" {
