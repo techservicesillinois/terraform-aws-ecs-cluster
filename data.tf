@@ -1,5 +1,5 @@
 module "get-subnets" {
-  source = "github.com/techservicesillinois/terraform-aws-util//modules/get-subnets?ref=v3.0.4"
+  source = "github.com/techservicesillinois/terraform-aws-util//modules/get-subnets?ref=v3.0.5"
 
   count = var.enable_ec2 ? 1 : 0
 
